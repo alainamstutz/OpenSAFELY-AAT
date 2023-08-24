@@ -9,5 +9,33 @@ plot_age <- ggplot(data=df_input, aes(df_input$age)) + geom_histogram()
 
 ggsave(
   plot= plot_age,
-  filename="descriptive.png", path=here::here("output"),
+  filename="histo_age.png", path=here::here("output"),
+)
+
+# Create the pyramid-like plot with facets for each region
+plot_age_pyramid_regions <- df_input %>%
+filter(region %in% c("London", "West Midlands")) %>%
+  group_by(age, sex, region) %>%
+  summarise(count = n()) %>%
+  mutate(count = ifelse(sex == "M", -count, count)) %>%
+  ggplot(aes(x = age, y = count, fill = sex)) +
+  geom_bar(stat = "identity", position = "identity", width = 2, color = "black") +
+  scale_fill_manual(values = c("M" = "blue", "F" = "green")) +
+  labs(title = "Age Pyramid of 2 Regions", x = "Age", y = "Count") +
+  theme_minimal() +
+  coord_flip() +
+  facet_wrap(~ region, ncol = 2) +
+  scale_x_continuous(breaks = seq(min(df_input$age), max(df_input$age), by = 10)) +
+  scale_y_continuous(breaks = seq(-5, 5, by = 1)) +
+  labs(y = "Count") +
+  theme(
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_rect(fill = "white"),
+    panel.grid.major = element_line(color = "gray90"),
+    panel.grid.minor = element_blank()
+  )
+
+ggsave(
+  plot= plot_age_pyramid_regions,
+  filename="age_pyramid_regions.png", path=here::here("output"),
 )
