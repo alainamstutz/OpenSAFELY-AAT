@@ -1,9 +1,22 @@
 library('tidyverse')
+library('arrow')
 
-df_input <- read_csv(
-  here::here("output", "input.csv.gz"),
-  col_types = cols(patient_id = col_integer(),age = col_double())
-)
+df_input <- arrow::read_feather(
+  here::here("output", "input.feather"),
+  #col_select = c(sex, age)
+  )
+
+df_out <- df_input
+
+readr::write_rds(df_out,
+                 here::here("output", "mydata.rds"),
+                 compress = "gz")
+# object <- readr::read_rds(here::here("output", "mydata.rds"))
+
+#   read_csv(
+#   here::here("output", "input.csv.gz"),
+#   col_types = cols(patient_id = col_integer(),age = col_double())
+# )
 
 plot_age <- ggplot(data=df_input, aes(df_input$age)) + geom_histogram()
 

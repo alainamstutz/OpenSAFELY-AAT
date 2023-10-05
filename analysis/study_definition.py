@@ -1,5 +1,9 @@
 from cohortextractor import StudyDefinition, patients, codelist, codelist_from_csv  # NOQA
 
+import numpy as np
+# Change this number to one for which your scripts 
+# successfully run on the dummy data
+np.random.seed(123456)
 
 study = StudyDefinition(
     default_expectations={
