@@ -1,25 +1,31 @@
+# load libraries
 library('tidyverse')
 library('arrow')
 
+# print current R version
+print(R.version.string)
+
+# read in dummy data (feather format)
 df_input <- arrow::read_feather(
   here::here("output", "input.feather"),
   #col_select = c(sex, age)
   )
 
+# read rds data (output and input)
 df_out <- df_input
-
 readr::write_rds(df_out,
                  here::here("output", "mydata.rds"),
                  compress = "gz")
 # object <- readr::read_rds(here::here("output", "mydata.rds"))
 
-#   read_csv(
+# read in dummy data (csv format)
+# df_input <-  read_csv(
 #   here::here("output", "input.csv.gz"),
 #   col_types = cols(patient_id = col_integer(),age = col_double())
 # )
 
-plot_age <- ggplot(data=df_input, aes(df_input$age)) + geom_histogram()
-
+# read rds data (output and input)
+plot_age <- ggplot(data=df_input, aes(age)) + geom_histogram()
 ggsave(
   plot= plot_age,
   filename="histo_age.png", path=here::here("output"),
